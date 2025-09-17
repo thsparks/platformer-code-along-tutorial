@@ -4,8 +4,8 @@
 //% block="Platformer"
 namespace platformer_code_along {
     /*********************************
-     * BLOCKS
-     *********************************/
+    * BLOCKS
+    *********************************/
 
     /**
      * Runs when the game begins
@@ -19,12 +19,14 @@ namespace platformer_code_along {
 
         if (stepNumber === 1) {
             validateTilemapWithAtLeastTwoTiles();
+        } else (stepNumber === 2) {
+
         }
     }
 
     /*********************************
-     * VALIDATION
-     *********************************/
+    * VALIDATION
+    *********************************/
     function validateTilemapWithAtLeastTwoTiles() {
         const tilemap = game.currentScene().tileMap;
 
@@ -33,26 +35,9 @@ namespace platformer_code_along {
             return;
         }
 
-        let images = [];
         const tileThreshold = 2;
-        for (let c = 0; c < tilemap.data.width; c++) {
-            for (let r = 0; r < tilemap.data.height; r++) {
-                const image = tilemap.getTile(c, r).getImage();
-                if (images.indexOf(image) === -1) {
-                    images.push(image);
-                }
-
-                if (images.length >= tileThreshold) {
-                    break;
-                }
-            }
-
-            if (images.length >= tileThreshold) {
-                break;
-            }
-        }
-
-        if (images.length < tileThreshold) {
+        const uniqueTiles = getUniqueTileImageCount(tilemap);
+        if (uniqueTiles < tileThreshold) {
             tutorialcontrols.sendValidationResult(false, "It looks like you only have one tile in your tilemap. Add a second one to continue!");
             return;
         }
@@ -65,5 +50,31 @@ namespace platformer_code_along {
         }
 
         tutorialcontrols.sendValidationResult(true, "Great job!");
+    }
+
+    function validateTilemapWithAtLeastThreeTiles() {
+        const tileThreshold = 3;
+        const uniqueTiles = getUniqueTileImageCount(tilemap);
+        if (uniqueTiles < tileThreshold) {
+            tutorialcontrols.sendValidationResult(false, "Add a new hazard tile to continue!");
+            return;
+        }
+    }
+
+    /*********************************
+    * UTIL
+    *********************************/
+    function getUniqueTileImageCount(tilemap: tiles.TileMap): number {
+        let images = [];
+        for (let c = 0; c < tilemap.data.width; c++) {
+            for (let r = 0; r < tilemap.data.height; r++) {
+                const image = tilemap.getTile(c, r).getImage();
+                if (images.indexOf(image) === -1) {
+                    images.push(image);
+                }
+            }
+        }
+
+        return images.length;
     }
 }
