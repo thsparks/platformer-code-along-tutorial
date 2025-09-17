@@ -18,9 +18,11 @@ namespace platformer_code_along {
         handler();
 
         if (stepNumber === 1) {
-            validateTilemapWithAtLeastTwoTiles();
-        } else (stepNumber === 2) {
-
+            validateTilemapWithAtLeastTwoTiles(); // Create tilemap, sky & ground
+        } else if (stepNumber === 2) {
+            validateTilemapWithAtLeastThreeTiles(); // Add hazard tile
+        } else if (stepNumber === 3) {
+            validateWallsInTilemap(); // Add walls
         }
     }
 
@@ -53,12 +55,26 @@ namespace platformer_code_along {
     }
 
     function validateTilemapWithAtLeastThreeTiles() {
+        const tilemap = game.currentScene().tileMap;
         const tileThreshold = 3;
         const uniqueTiles = getUniqueTileImageCount(tilemap);
         if (uniqueTiles < tileThreshold) {
             tutorialcontrols.sendValidationResult(false, "Add a new hazard tile to continue!");
             return;
         }
+    }
+
+    function validateWallsInTilemap() {
+        const tilemap = game.currentScene().tileMap;
+
+        for (let c = 0; c < tilemap.data.width; c++) {
+            for (let r = 0; r < tilemap.data.height; r++) {
+                if (tilemap.data.isWall(c, r)) {
+                    tutorialcontrols.sendValidationResult(true, "Nice work!");
+                }
+            }
+        }
+        tutorialcontrols.sendValidationResult(false, "Add walls in your tilemap to continue!");
     }
 
     /*********************************
