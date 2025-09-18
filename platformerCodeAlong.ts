@@ -76,14 +76,19 @@ namespace platformer_code_along {
     * They do NOT send the generic success message. That is left for the parent.
     *********************************/
     function validateMoveLeftAndRight(): boolean {
+        if (!validatePlayerExists()) {
+            return false;
+        }
+
         // Start with a validation failure, which will be overwritten when the player moves are detected
         tutorialcontrols.sendValidationResult(false, "Move your player left and right to continue!");
 
+        let playerSprite = sprites.allOfKind(SpriteKind.Player)[0];
+        let lastKnownX = playerSprite.x;
         let hasMovedLeft: boolean;
         let hasMovedRight: boolean;
         game.onUpdate(() => {
-            const players = sprites.allOfKind(SpriteKind.Player);
-            if (!hasMovedRight && players.find(p => p.vx > 0)) {
+            if (!hasMovedRight && playerSprite.x > lastKnownX) {
                 hasMovedRight = true;
                 if (hasMovedLeft) {
                     tutorialcontrols.sendValidationResult(true, "Nice work!");
@@ -91,7 +96,7 @@ namespace platformer_code_along {
                     tutorialcontrols.sendValidationResult(false, "Move your player left to continue!");
                 }
             }
-            if (!hasMovedLeft && players.find(p => p.vx < 0)) {
+            if (!hasMovedLeft && playerSprite.x < lastKnownX) {
                 hasMovedLeft = true;
                 if (hasMovedRight) {
                     tutorialcontrols.sendValidationResult(true, "Nice work!");
@@ -99,6 +104,7 @@ namespace platformer_code_along {
                     tutorialcontrols.sendValidationResult(false, "Move your player right to continue!");
                 }
             }
+            lastKnownX = playerSprite.x;
         })
 
         return false;
