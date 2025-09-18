@@ -108,10 +108,21 @@ namespace platformer_code_along {
         let jumpThreshold = 3;
         let initialLand = false;
         let inAir = true;
+        let confettiStart = -1;
+        let hasDoneConfetti = false;
         game.onUpdate(() => {
             if (playerSprite.ay === 0) {
                 // No gravity, no checks.
                 return;
+            }
+
+            if (hasDoneConfetti && confettiStart !== -1 && game.runtime() - confettiStart > 1000) {
+                effects.confetti.endScreenEffect();
+                confettiStart = -1;
+            }
+
+            if (jumpCount >= jumpThreshold) {
+                return; // Already done
             }
 
             let checkDirection = playerSprite.ay > 0 ? CollisionDirection.Bottom : CollisionDirection.Top;
@@ -126,6 +137,9 @@ namespace platformer_code_along {
 
                     if (jumpCount >= jumpThreshold) {
                         tutorialcontrols.sendValidationResult(true, "Nice jumping!");
+                        effects.confetti.startScreenEffect();
+                        confettiStart = game.runtime();
+                        hasDoneConfetti = true;
                     } else if (jumpCount !== lastSentJumpCount) {
                         let jumpsRemaining = jumpThreshold - jumpCount;
                         tutorialcontrols.sendValidationResult(false, `Jump ${jumpsRemaining} more times to continue!`);
