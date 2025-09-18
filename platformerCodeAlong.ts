@@ -104,17 +104,18 @@ namespace platformer_code_along {
         // Use a delay to ensure it isn't just in on start
         const startTime = game.runtime();
         
-        game.onGameOverAlso((win) => {
+        game.onGameOverAlso(win => {
             if (win !== expectWin) {
                 tutorialcontrols.sendValidationResult(false, `Whoops, you ${win ? "won" : "lost"}! For this step, trigger a ${expectWin ? "win" : "loss"} to continue!`);
+                return;
             }
 
             if (game.runtime() - startTime > 2000) {
                 tutorialcontrols.sendValidationResult(false, "That was a little quick. Make sure your game over isn't just in the on start block!");
+                return;
             }
 
             tutorialcontrols.sendValidationResult(true, "Nice job!");
-
         })
 
         return false;
