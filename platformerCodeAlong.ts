@@ -4,7 +4,7 @@
 //      - For example, start gravity on A button press (or add a title screen)
 
 //% weight=100
-//% color=#66DBD1
+//% color=#4fa7bd
 //% icon="\uf062"
 //% block="Platformer"
 namespace platformer_code_along {
@@ -15,7 +15,7 @@ namespace platformer_code_along {
     /**
      * Runs when the game begins
      */
-    //% block="On Game Start"
+    //% block="on game start"
     export function onGameStart(handler: () => void) {
         const stepNumber = tutorialcontrols.getTutorialStepNumber();
 
