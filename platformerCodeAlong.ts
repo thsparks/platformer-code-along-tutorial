@@ -4,8 +4,8 @@
 //      - For example, start gravity on A button press (or add a title screen)
 
 //% weight=100
-//% color=#7F7A7A
-// % icon="\uf544" - TODO icon
+//% color=#66DBD1
+//% icon="\uf062"
 //% block="Platformer"
 namespace platformer_code_along {
     /*********************************
