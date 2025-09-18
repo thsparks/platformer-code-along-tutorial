@@ -104,7 +104,7 @@ namespace platformer_code_along {
         // Use a delay to ensure it isn't just in on start
         const startTime = game.runtime();
         
-        game.onGameOver((win) => {
+        game.onGameOverAlso((win) => {
             if (win !== expectWin) {
                 tutorialcontrols.sendValidationResult(false, `Whoops, you ${win ? "won" : "lost"}! For this step, trigger a ${expectWin ? "win" : "loss"} to continue!`);
             }
