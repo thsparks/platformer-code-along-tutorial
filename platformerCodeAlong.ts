@@ -110,7 +110,7 @@ namespace platformer_code_along {
                 return;
             }
 
-            if (game.runtime() - startTime > 2000) {
+            if (game.runtime() - startTime < 500) {
                 tutorialcontrols.sendValidationResult(false, "That was a little quick. Make sure your game over isn't just in the on start block!");
                 return;
             }
