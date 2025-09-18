@@ -45,21 +45,27 @@ namespace platformer_code_along {
             case 4:
                 // Add goal
                 valid = validateTilemapTileCount(4, "Add a new goal tile to continue!");
+                break;
             case 5:
                 // Player sprite
                 valid = validatePlayerExists();
+                break;
             case 6:
                 // Starting position
                 stepHasValidation = false;
+                break;
             case 7:
                 // Move left and right
                 valid = validateMoveLeftAndRight();
+                break;
             case 8:
                 // Gravity
                 valid = validateGravity();
+                break;
             case 9:
                 // Jumping
                 valid = validateJumping();
+                break;
             case 10:
                 // Game over lose
             case 11:
