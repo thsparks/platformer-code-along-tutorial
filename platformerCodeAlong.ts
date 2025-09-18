@@ -18,6 +18,7 @@ namespace platformer_code_along {
         handler();
 
         let valid = true;
+        let stepHasValidation = true;
         switch (stepNumber) {
             case 1:
                 // Create tilemap, sky & ground
@@ -39,18 +40,79 @@ namespace platformer_code_along {
             case 4:
                 // Add goal
                 valid = validateTilemapTileCount(4, "Add a new goal tile to continue!");
+            case 5:
+                // Player sprite
+                valid = validatePlayerExists();
+            case 6:
+                // Starting position
+                stepHasValidation = false;
+            case 7:
+                // Move left and right
+                valid = validateMoveLeftAndRight();
+            case 8:
+                // Gravity
+            case 9:
+                // Jumping
+            case 10:
+                // Game over lose
+            case 11:
+                // Game over win
+            case 12:
+                // Test
             default:
                 // No validation
+                stepHasValidation = false;
         }
 
-        if (valid) {
+        if (valid && stepHasValidation) {
             tutorialcontrols.sendValidationResult(true, "Nice work!");
         }
     }
 
     /*********************************
     * VALIDATION
+    * These functions trigger a failure result message if validation fails.
+    * Then return false if failed, true otherwise.
+    * They do NOT send the generic success message. That is left for the parent.
     *********************************/
+    function validateMoveLeftAndRight(): boolean {
+        // Start with a validation failure, which will be overwritten when the player moves are detected
+        tutorialcontrols.sendValidationResult(false, "Move your player left and right to continue!");
+
+        let hasMovedLeft: boolean;
+        let hasMovedRight: boolean;
+        game.onUpdate(() => {
+            const players = sprites.allOfKind(SpriteKind.Player);
+            if (!hasMovedRight && players.find(p => p.vx > 0)) {
+                hasMovedRight = true;
+                if (hasMovedLeft) {
+                    tutorialcontrols.sendValidationResult(true, "Nice work!");
+                } else {
+                    tutorialcontrols.sendValidationResult(false, "Move your player left to continue!");
+                }
+            }
+            if (!hasMovedLeft && players.find(p => p.vx < 0)) {
+                hasMovedLeft = true;
+                if (hasMovedRight) {
+                    tutorialcontrols.sendValidationResult(true, "Nice work!");
+                } else {
+                    tutorialcontrols.sendValidationResult(false, "Move your player right to continue!");
+                }
+            }
+        })
+
+        return false;
+    }
+
+    function validatePlayerExists(): boolean {
+        const playerSprites = sprites.allOfKind(SpriteKind.Player);
+        if (playerSprites.length <= 0) {
+            tutorialcontrols.sendValidationResult(false, "Create a sprite of kind Player to continue!")
+            return false;
+        }
+        return true;
+    }
+
     function validateTilemapExists(): boolean {
         const tilemap = game.currentScene().tileMap;
 
