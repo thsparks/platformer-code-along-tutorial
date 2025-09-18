@@ -1,3 +1,8 @@
+// TODO Items
+// - Consider moving all validation into an onGameUpdate loop, providing some kind of callback.
+//      - That way, if they have the code but do it somewhere outside of on start, it still works.
+//      - For example, start gravity on A button press (or add a title screen)
+
 //% weight=100
 //% color=#7F7A7A
 // % icon="\uf544" - TODO icon
@@ -51,6 +56,7 @@ namespace platformer_code_along {
                 valid = validateMoveLeftAndRight();
             case 8:
                 // Gravity
+                valid = validateGravity();
             case 9:
                 // Jumping
             case 10:
@@ -75,6 +81,24 @@ namespace platformer_code_along {
     * Then return false if failed, true otherwise.
     * They do NOT send the generic success message. That is left for the parent.
     *********************************/
+    function validateGravity(): boolean {
+        if (!validatePlayerExists()) {
+            return false;
+        }
+
+        let playerSprite = sprites.allOfKind(SpriteKind.Player)[0];
+        if (playerSprite.ay === 0) {
+            tutorialcontrols.sendValidationResult(false, "Set your player sprite's Y acceleration to continue.");
+            return false;
+        } else if (playerSprite.ay < 0) {
+            // Allow upside down gravity but give a warning
+            tutorialcontrols.sendValidationResult(true, "Oh my! Your gravity is reversed. Make sure that's what you want before you continue!");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     function validateMoveLeftAndRight(): boolean {
         if (!validatePlayerExists()) {
             return false;
