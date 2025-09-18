@@ -63,14 +63,18 @@ namespace platformer_code_along {
                 valid = validateGravity();
                 break;
             case 9:
+                // Camera follow
+                stepHasValidation = false;
+                break;
+            case 10:
                 // Jumping
                 valid = validateJumping();
                 break;
-            case 10:
-                // Game over lose
             case 11:
-                // Game over win
+                // Game over lose
             case 12:
+                // Game over win
+            case 13:
                 // Test
             default:
                 // No validation
