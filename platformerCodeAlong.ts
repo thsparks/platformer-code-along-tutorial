@@ -59,6 +59,7 @@ namespace platformer_code_along {
                 valid = validateGravity();
             case 9:
                 // Jumping
+                valid = validateJumping();
             case 10:
                 // Game over lose
             case 11:
@@ -81,6 +82,54 @@ namespace platformer_code_along {
     * Then return false if failed, true otherwise.
     * They do NOT send the generic success message. That is left for the parent.
     *********************************/
+    function validateJumping(): boolean {
+        if (!validatePlayerExists()) {
+            return false;
+        }
+
+        // Start with a validation failure, which will be overwritten when the jumps are detected
+        tutorialcontrols.sendValidationResult(false, "Jump 3 times to continue!");
+
+        // TODO account for horizontal gravity?
+
+        let playerSprite = sprites.allOfKind(SpriteKind.Player)[0];
+        let lastSentJumpCount = 0;
+        let jumpCount = 0;
+        let jumpThreshold = 3;
+        let initialLand = false;
+        let inAir = true;
+        game.onUpdate(() => {
+            if (playerSprite.ay === 0) {
+                // No gravity, no checks.
+                return;
+            }
+
+            let checkDirection = playerSprite.ay > 0 ? CollisionDirection.Bottom : CollisionDirection.Top;
+            if (playerSprite.isHittingTile(checkDirection)) {
+                if (!initialLand) {
+                    initialLand = true;
+                    inAir = false;
+                } else if (inAir) {
+                    // Jumped and landed
+                    jumpCount++;
+                    inAir = false;
+
+                    if (jumpCount >= jumpThreshold) {
+                        tutorialcontrols.sendValidationResult(true, "Nice jumping!");
+                    } else if (jumpCount !== lastSentJumpCount) {
+                        let jumpsRemaining = jumpThreshold - jumpCount;
+                        tutorialcontrols.sendValidationResult(false, `Jump ${jumpsRemaining} more times to continue!`);
+                        lastSentJumpCount = jumpCount;
+                    }
+                }
+            } else {
+                inAir = true;
+            }
+        })
+
+        return false;
+    }
+
     function validateGravity(): boolean {
         if (!validatePlayerExists()) {
             return false;
