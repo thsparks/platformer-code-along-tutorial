@@ -72,10 +72,16 @@ namespace platformer_code_along {
                 break;
             case 11:
                 // Game over lose
+                valid = validateGameOver(false);
+                break;
             case 12:
                 // Game over win
+                valid = validateGameOver(true);
+                break;
             case 13:
                 // Test
+                stepHasValidation = false;
+                break;
             default:
                 // No validation
                 stepHasValidation = false;
@@ -92,6 +98,28 @@ namespace platformer_code_along {
     * Then return false if failed, true otherwise.
     * They do NOT send the generic success message. That is left for the parent.
     *********************************/
+    function validateGameOver(expectWin: boolean) {
+        tutorialcontrols.sendValidationResult(false, `Trigger a game over ${expectWin ? "win" : "lose"} to continue!`);
+
+        // Use a delay to ensure it isn't just in on start
+        const startTime = game.runtime();
+        
+        game.onGameOver((win) => {
+            if (win !== expectWin) {
+                tutorialcontrols.sendValidationResult(false, `Whoops, you ${win ? "won" : "lost"}! For this step, trigger a ${expectWin ? "win" : "loss"} to continue!`);
+            }
+
+            if (game.runtime() - startTime > 2000) {
+                tutorialcontrols.sendValidationResult(false, "That was a little quick. Make sure your game over isn't just in the on start block!");
+            }
+
+            tutorialcontrols.sendValidationResult(true, "Nice job!");
+
+        })
+
+        return false;
+    }
+
     function validateJumping(): boolean {
         if (!validatePlayerExists()) {
             return false;
@@ -116,7 +144,7 @@ namespace platformer_code_along {
                 return;
             }
 
-            if (hasDoneConfetti && confettiStart !== -1 && game.runtime() - confettiStart > 1000) {
+            if (hasDoneConfetti && confettiStart !== -1 && game.runtime() - confettiStart > 3000) {
                 effects.confetti.endScreenEffect();
                 confettiStart = -1;
             }
